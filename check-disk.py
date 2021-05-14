@@ -79,7 +79,7 @@ def main():
         wmax = cmax
 
     if(wmax < 0 or wmax > 100 or cmax < 0 or cmax > 100):
-        mylogger.unknown("Invalid threshold for disk size")
+        mylogger.warning("Invalid threshold for disk size")
         sys.exit(UNKNOWN)
 
     # Run check command
@@ -88,10 +88,10 @@ def main():
         mylogger.debug(f'Running OS command line: {cmd_df}')
         process = run(cmd_df, check=True, timeout=10, stdout=PIPE)
     except (OSError, TimeoutExpired, ValueError) as e:
-        mylogger.unknown(f'{e}')
+        mylogger.warning(f'{e}')
         sys.exit(UNKNOWN)
     except Exception as e:
-        mylogger.unknown(f'Unexpected exception: {e}')
+        mylogger.warning(f'Unexpected exception: {e}')
         sys.exit(UNKNOWN)
 
     # Parse result
@@ -102,10 +102,10 @@ def main():
             if(mnt.decode("utf-8") == args.mount_point):
                 used_space = int(use.decode("utf-8").replace("%", ""))
         if(used_space < 0):
-            mylogger.unknown(f'Unable to find {args.mount_point}')
+            mylogger.warning(f'Unable to find {args.mount_point}')
             sys.exit(UNKNOWN)
     except Exception as e:
-        mylogger.unknown(f'{e}')
+        mylogger.warning(f'{e}')
         sys.exit(UNKNOWN)
 
     # Verify result and print output in Nagios format
